@@ -6,7 +6,7 @@ import { ATSModal } from '@/components/ATSModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { toast } from '@/hooks/use-toast';
 import { canScanToday, markScanCompleted, getNextScanDate } from '@/utils/storage';
-import { Zap } from 'lucide-react';
+import { Zap, User } from 'lucide-react';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,20 +34,26 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header Section */}
-      <div className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-50">
+      <div className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="flex items-center gap-2">
           <Zap className="h-6 w-6" />
-          <h2 className="text-xl font-semibold">GreecodeATS</h2>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-semibold leading-none">GreecodeATS</h2>
+            <span className="text-xs text-muted-foreground">by greecode.in</span>
+          </div>
         </div>
         
         <div className="flex items-center gap-4">
-          {/* User module would go here */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background/40 text-sm">
+            <User className="h-4 w-4" />
+            <span>Hello, User</span>
+          </div>
           <ThemeToggle />
         </div>
       </div>
       
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16 lg:py-24 mt-12">
+      <div className="container mx-auto px-4 py-16 lg:py-24 mt-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

@@ -1,10 +1,12 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle, AlertCircle, Lightbulb, Target, FileText } from 'lucide-react';
+import { X, CheckCircle, AlertCircle, Lightbulb, Target, FileText, Share2, Download, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
 interface ATSModalProps {
   isOpen: boolean;
@@ -31,7 +33,11 @@ export function ATSModal({ isOpen, onClose, fileName }: ATSModalProps) {
       "Missing contact information in header",
       "Using tables or columns that ATS can't read",
       "Inconsistent date formatting"
-    ]
+    ],
+    keywords: {
+      matched: ["javascript", "react", "frontend", "development", "html", "css"],
+      missing: ["typescript", "node.js", "api", "testing"]
+    }
   };
 
   return (
@@ -56,7 +62,10 @@ export function ATSModal({ isOpen, onClose, fileName }: ATSModalProps) {
             <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b bg-background/95 backdrop-blur-sm">
               <div>
                 <h2 className="text-2xl font-bold">ATS Analysis Results</h2>
-                <p className="text-sm text-muted-foreground">{fileName}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-sm text-muted-foreground">{fileName}</p>
+                  <Badge variant="outline" className="text-xs">Premium Analysis</Badge>
+                </div>
               </div>
               <Button variant="ghost" size="sm" onClick={onClose}>
                 <X className="h-4 w-4" />
@@ -71,118 +80,179 @@ export function ATSModal({ isOpen, onClose, fileName }: ATSModalProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
               >
-                <Card>
-                  <CardHeader>
+                <Card className="overflow-hidden border-2">
+                  <CardHeader className="bg-muted/50">
                     <CardTitle className="flex items-center gap-2">
                       <Target className="h-5 w-5" />
                       ATS Score
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-3xl font-bold">{analysisData.score}%</span>
-                      <span className="text-sm text-muted-foreground">Good Match</span>
+                      <span className="text-4xl font-bold">{analysisData.score}%</span>
+                      <div className="text-right">
+                        <span className="inline-block px-4 py-1 rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500 text-sm font-medium">
+                          Good Match
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Your resume is well-structured for ATS</p>
+                      </div>
                     </div>
-                    <Progress value={analysisData.score} className="h-2" />
+                    <Progress value={analysisData.score} className="h-2 mt-4" />
                   </CardContent>
                 </Card>
               </motion.div>
 
-              {/* Detailed Metrics */}
+              {/* Tabs for different sections */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="grid md:grid-cols-2 gap-4"
               >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <CheckCircle className="h-4 w-4" />
-                      Keyword Matching
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xl font-semibold">{analysisData.keywordMatch}%</span>
+                <Tabs defaultValue="metrics" className="w-full">
+                  <TabsList className="w-full justify-start mb-4 overflow-x-auto">
+                    <TabsTrigger value="metrics">Key Metrics</TabsTrigger>
+                    <TabsTrigger value="improvements">Improvement Suggestions</TabsTrigger>
+                    <TabsTrigger value="keywords">Keywords Analysis</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="metrics" className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <CheckCircle className="h-4 w-4" />
+                            Keyword Matching
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xl font-semibold">{analysisData.keywordMatch}%</span>
+                          </div>
+                          <Progress value={analysisData.keywordMatch} className="h-1.5" />
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2 text-base">
+                            <FileText className="h-4 w-4" />
+                            Formatting
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xl font-semibold">{analysisData.formatting}%</span>
+                          </div>
+                          <Progress value={analysisData.formatting} className="h-1.5" />
+                        </CardContent>
+                      </Card>
                     </div>
-                    <Progress value={analysisData.keywordMatch} className="h-1.5" />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <FileText className="h-4 w-4" />
-                      Formatting
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xl font-semibold">{analysisData.formatting}%</span>
-                    </div>
-                    <Progress value={analysisData.formatting} className="h-1.5" />
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Improvements */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5" />
-                      Improvement Suggestions
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {analysisData.improvements.map((improvement, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 flex-shrink-0"></div>
-                          <span className="text-sm">{improvement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Common Mistakes */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <AlertCircle className="h-5 w-5" />
-                      Common Mistakes Detected
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {analysisData.mistakes.map((mistake, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-destructive mt-2 flex-shrink-0"></div>
-                          <span className="text-sm">{mistake}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                  
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <AlertCircle className="h-5 w-5" />
+                          Common Mistakes Detected
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-2">
+                          {analysisData.mistakes.map((mistake, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-destructive mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">{mistake}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                  
+                  <TabsContent value="improvements">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Lightbulb className="h-5 w-5" />
+                          Improvement Suggestions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-4">
+                          {analysisData.improvements.map((improvement, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                                {index + 1}
+                              </div>
+                              <div>
+                                <p className="text-sm">{improvement}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {index === 0 && "Keywords ensure your resume gets through initial ATS filtering."}
+                                  {index === 1 && "Standard sections help ATS correctly categorize your information."}
+                                  {index === 2 && "Numbers make your achievements stand out and quantifiable."}
+                                  {index === 3 && "Simple fonts prevent parsing errors in most ATS systems."}
+                                </p>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                  
+                  <TabsContent value="keywords">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Keyword Analysis</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Matched Keywords</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {analysisData.keywords.matched.map((keyword, i) => (
+                                <Badge key={i} variant="secondary" className="bg-primary/10 hover:bg-primary/20">
+                                  {keyword}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Missing Important Keywords</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {analysisData.keywords.missing.map((keyword, i) => (
+                                <Badge key={i} variant="outline" className="text-muted-foreground">
+                                  {keyword}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                </Tabs>
               </motion.div>
             </div>
 
             {/* Footer */}
             <div className="sticky bottom-0 p-6 border-t bg-background/95 backdrop-blur-sm">
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button onClick={handleRedirect} size="lg" className="flex-1 sm:flex-initial">
+              <div className="flex flex-wrap gap-3 justify-between items-center">
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Copy className="h-3.5 w-3.5" />
+                    Copy
+                  </Button>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Download className="h-3.5 w-3.5" />
+                    Download
+                  </Button>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Share2 className="h-3.5 w-3.5" />
+                    Share
+                  </Button>
+                </div>
+                <Button onClick={handleRedirect} size="default" className="gap-1">
                   ← Go back to Greecode.in
                 </Button>
               </div>
