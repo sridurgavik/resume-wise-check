@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileUpload } from '@/components/FileUpload';
@@ -6,7 +5,8 @@ import { ATSModal } from '@/components/ATSModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { toast } from '@/hooks/use-toast';
 import { canScanToday, markScanCompleted, getNextScanDate } from '@/utils/storage';
-import { Zap, User } from 'lucide-react';
+import { Zap } from 'lucide-react';
+import { UserProfile } from '@/components/UserProfile';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -44,10 +44,7 @@ const Index = () => {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border bg-background/40 text-sm">
-            <User className="h-4 w-4" />
-            <span>Hello, User</span>
-          </div>
+          <UserProfile />
           <ThemeToggle />
         </div>
       </div>
