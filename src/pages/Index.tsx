@@ -6,6 +6,7 @@ import { ATSModal } from '@/components/ATSModal';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { toast } from '@/hooks/use-toast';
 import { canScanToday, markScanCompleted, getNextScanDate } from '@/utils/storage';
+import { Zap } from 'lucide-react';
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);
@@ -42,11 +43,13 @@ const Index = () => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Zap className="h-6 w-6" />
+            <h2 className="text-xl font-semibold">GreecodeATS</h2>
+          </div>
+          
           <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
             Free ATS Resume Checker
-            <span className="block text-muted-foreground text-2xl lg:text-3xl font-normal mt-2">
-              by Greecode
-            </span>
           </h1>
           
           <motion.p
