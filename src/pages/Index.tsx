@@ -33,21 +33,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <ThemeToggle />
+      {/* Header Section */}
+      <div className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-50">
+        <div className="flex items-center gap-2">
+          <Zap className="h-6 w-6" />
+          <h2 className="text-xl font-semibold">GreecodeATS</h2>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          {/* User module would go here */}
+          <ThemeToggle />
+        </div>
+      </div>
       
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16 lg:py-24">
+      <div className="container mx-auto px-4 py-16 lg:py-24 mt-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Zap className="h-6 w-6" />
-            <h2 className="text-xl font-semibold">GreecodeATS</h2>
-          </div>
-          
           <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
             Free ATS Resume Checker
           </h1>
@@ -58,7 +64,7 @@ const Index = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto"
           >
-            1 scan per day. No login needed.
+            1 scan per day.
           </motion.p>
 
           {/* Upload Section */}
